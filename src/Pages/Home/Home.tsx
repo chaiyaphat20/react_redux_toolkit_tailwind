@@ -16,13 +16,15 @@ import settingIcon from '../../assets/images/menu/settings.png';
 
 import ReactToPrint from 'react-to-print';
 
+import { CSVLink } from 'react-csv';
+
 function Home() {
   const [items, setItems] = useState<Excel[]>([]);
   const refTable = useRef<HTMLTableElement>(null);
 
-  const xslToJson = (workbook: any):Excel[] => {
+  const xslToJson = (workbook: any): Excel[] => {
     var sheet_name_list = workbook.SheetNames;
-    return XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]], { raw: false, dateNF: 'DD-MMM-YYYY' });
+    return XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]], { raw: false });
   };
 
   const readExcel = (e: any) => {
@@ -36,11 +38,25 @@ function Home() {
       const wb = XLSX.read(bstr, { type: rABS ? 'binary' : 'array' });
       /* Get first worksheet */
       let arr = xslToJson(wb);
+      console.log(arr);
       setItems(arr);
     };
     if (rABS) reader.readAsBinaryString(file);
     else reader.readAsArrayBuffer(file);
   };
+
+  const headers = [
+    { label: 'PLANT_CODE', key: 'PLANT_CODE' },
+    { label: 'ROUND_NO', key: 'ROUND_NO' },
+    { label: 'ROUTE_SEQ', key: 'ROUTE_SEQ' },
+    { label: 'ROUTE_CODE', key: 'ROUTE_CODE' },
+    { label: 'ROUTE_NAME', key: 'ROUTE_NAME' },
+    { label: 'DOCK_NO', key: 'DOCK_NO' },
+    { label: 'LOADING_TIME', key: 'LOADING_TIME' },
+    { label: 'LEAVE_TIME', key: 'LEAVE_TIME' },
+    { label: 'LATE_TIME', key: 'LATE_TIME' },
+    { label: 'ARRIVE_TIME', key: 'ARRIVE_TIME' },
+  ];
 
   return (
     <div className="flex flex-col w-screen h-screen overflow-y-hidden min-w-980">
@@ -117,6 +133,10 @@ function Home() {
                 <div className="flex flex-col items-center mr-2">
                   <img src={directDownloadIcon} width={30} className="cursor-pointer " alt="images" />
                   <h1>Download</h1>
+                  <CSVLink data={items} headers={headers}>
+                    Download me
+                  </CSVLink>
+                  ;
                 </div>
               </div>
             </div>
