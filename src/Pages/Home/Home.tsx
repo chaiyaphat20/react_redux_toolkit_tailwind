@@ -1,6 +1,6 @@
 import { Excel } from '../../models/excel';
 import * as XLSX from 'xlsx';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import excelIcon from '../../assets/images/excel.png';
 import printerIcon from '../../assets/images/printer.png';
@@ -8,35 +8,38 @@ import directDownloadIcon from '../../assets/images/direct-download.png';
 import userIcon from '../../assets/images/user.png';
 import moreIcon from '../../assets/images/more.png';
 
-
 import homeIcon from '../../assets/images/menu/home.png';
 import configIcon from '../../assets/images/menu/config.png';
 import maintainIcon from '../../assets/images/menu/add.png';
 import dashboardIcon from '../../assets/images/menu/dashboard.png';
 import settingIcon from '../../assets/images/menu/settings.png';
 
+import ReactToPrint from 'react-to-print';
+
 function Home() {
   const [items, setItems] = useState<Excel[]>([]);
-  const readExcel = (file: any) => {
-    const promise = new Promise<Excel[]>((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsArrayBuffer(file);
-      fileReader.onload = (e) => {
-        const bufferArray = e.target?.result;
-        const wb = XLSX.read(bufferArray, { type: 'buffer' });
-        const wsname = wb.SheetNames[0];
-        const ws = wb.Sheets[wsname];
-        const data: Excel[] = XLSX.utils.sheet_to_json(ws, { raw: false });
-        resolve(data);
-        console.log(data);
-      };
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
-    promise.then((d) => {
-      setItems(d);
-    });
+  const refTable = useRef<HTMLTableElement>(null);
+
+  const xslToJson = (workbook: any):Excel[] => {
+    var sheet_name_list = workbook.SheetNames;
+    return XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]], { raw: false, dateNF: 'DD-MMM-YYYY' });
+  };
+
+  const readExcel = (e: any) => {
+    const file = e.target.files[0];
+    /* Boilerplate to set up FileReader */
+    const reader = new FileReader();
+    const rABS = !!reader.readAsBinaryString;
+    reader.onload = (e) => {
+      /* Parse data */
+      const bstr = e.target?.result;
+      const wb = XLSX.read(bstr, { type: rABS ? 'binary' : 'array' });
+      /* Get first worksheet */
+      let arr = xslToJson(wb);
+      setItems(arr);
+    };
+    if (rABS) reader.readAsBinaryString(file);
+    else reader.readAsArrayBuffer(file);
   };
 
   return (
@@ -56,7 +59,7 @@ function Home() {
       <div className="flex w-full h-full-4rem">
         <div className="flex flex-col items-center w-20 h-full py-2 bg-gray-200 ">
           <div className="flex flex-col items-center justify-center my-2 cursor-pointer w-14 h-14">
-            <img src={homeIcon} width={35}  alt="images" />
+            <img src={homeIcon} width={35} alt="images" />
             <h1 className="text-sm">Home</h1>
           </div>
           <div className="flex flex-col items-center justify-center my-2 cursor-pointer w-14 h-14">
@@ -64,7 +67,7 @@ function Home() {
             <h1 className="text-sm">Config</h1>
           </div>
           <div className="flex flex-col items-center justify-center my-2 cursor-pointer w-14 h-14">
-            <img src={maintainIcon} width={35}  alt="images" />
+            <img src={maintainIcon} width={35} alt="images" />
             <h1 className="text-sm">Maintain</h1>
           </div>
           <div className="flex flex-col items-center justify-center my-2 cursor-pointer w-14 h-14">
@@ -72,7 +75,7 @@ function Home() {
             <h1 className="text-sm">Dashboard</h1>
           </div>
           <div className="flex flex-col items-center justify-center my-2 cursor-pointer w-14 h-14">
-            <img src={settingIcon} width={35}  alt="images" />
+            <img src={settingIcon} width={35} alt="images" />
             <h1 className="text-sm">Setting</h1>
           </div>
         </div>
@@ -95,15 +98,21 @@ function Home() {
                     id="file-input"
                     type="file"
                     onChange={(e) => {
-                      if (!e.target.files) return;
-                      const file = e.target.files[0];
-                      readExcel(file);
+                      readExcel(e);
                     }}
                   />
                 </div>
                 <div className="flex flex-col items-center mr-2">
-                  <img src={printerIcon} width={30} className="cursor-pointer " alt="images" />
-                  <h1>Print</h1>
+                  <ReactToPrint
+                    pageStyle="@page { size:auto; margin: 0mm; }  @media print { body { -webkit-print-color-adjust: exact; padding: 20px !important; } }"
+                    trigger={() => <img src={printerIcon} width={30} className="cursor-pointer " alt="images" />}
+                    content={() => refTable.current}
+                  />
+                  <ReactToPrint
+                    pageStyle="@page { size:auto; margin: 0mm; }  @media print { body { -webkit-print-color-adjust: exact; padding: 20px !important; } }"
+                    trigger={() => <h1 className="cursor-pointer">Print</h1>}
+                    content={() => refTable.current}
+                  />
                 </div>
                 <div className="flex flex-col items-center mr-2">
                   <img src={directDownloadIcon} width={30} className="cursor-pointer " alt="images" />
@@ -112,8 +121,8 @@ function Home() {
               </div>
             </div>
           </div>
-          <div className="w-full pb-4 overflow-y-scroll text-xs 2xl:xl:text-sm h-4/5">
-            <table className="w-full text-center ">
+          <div className="w-full pb-4 overflow-y-scroll text-xs 2xl:text-sm h-4/5">
+            <table className="w-full text-center " ref={refTable}>
               <thead className="text-white bg-gray-600">
                 <tr className="flex w-full py-2 ">
                   <th className="w-1/12 ">รอบที่</th>
