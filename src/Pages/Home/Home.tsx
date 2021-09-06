@@ -132,9 +132,8 @@ function Home() {
                 </div>
                 <div className="flex flex-col items-center mr-2">
                   <img src={directDownloadIcon} width={30} className="cursor-pointer " alt="images" />
-                  <h1>Download</h1>
                   <CSVLink data={items} headers={headers}>
-                    Download me
+                    <h1>Download</h1>
                   </CSVLink>
                   ;
                 </div>
