@@ -1,27 +1,62 @@
 import { useState } from 'react';
+import { useHistory } from 'react-router';
 import SelectorLdap from './Selector/SelectorLdap';
 import SelectorOrg from './Selector/SelectorOrg';
+import { fetchLogin } from '../../services/Api.services';
+import { toast } from 'react-toastify';
+import TostNotification from '../../components/TostNotification';
 function Login() {
   const [org, setOrg] = useState<string>('');
-  console.log('org: ' + org);
+  const [userId, setUserId] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+
+  const history = useHistory();
+
+  const handleUserID = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setUserId(e.currentTarget.value);
+  };
+  const handlePassword = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setPassword(e.currentTarget.value);
+  };
+
+  const handleLogin = async (e: React.MouseEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (userId === '' || password === '') {
+      return;
+    }
+    const params = {
+      UserId: userId,
+      Password: password,
+      AuthenMode: 'AD',
+      LDAPServer: 'CPF',
+    };
+    const isLogin = await fetchLogin(params);
+    if (isLogin.GetAuthenResult) {
+      localStorage.setItem('isLogin', 'login');
+      localStorage.setItem('time', new Date().toString());
+      history.replace('/home');
+    } else {
+      toast.error('Login Fail!', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen ">
       <h1 className="block mb-8 text-4xl font-bold text-gray-500">OPS</h1>
-      <form
-        className="w-full max-w-sm"
-        //  onSubmit={handleLogin}
-      >
+      <form className="w-full max-w-sm" onSubmit={handleLogin}>
         <div className="mb-6">
           <label className="block pr-4 mb-1 font-bold text-gray-500 " htmlFor="inline-full-name">
             Username
           </label>
           <div className="">
             <input
-              // onChange={(e) => handleUserID(e)}
+              onChange={(e) => handleUserID(e)}
               className="w-full px-4 py-2 leading-tight text-gray-700 bg-gray-200 border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"
               id="inline-full-name"
               type="text"
-              // value={userId}
+              value={userId}
               placeholder="username"
             />
           </div>
@@ -32,8 +67,8 @@ function Login() {
           </label>
           <div className="">
             <input
-              // onChange={(e) => handlePassword(e)}
-              // value={password}
+              onChange={(e) => handlePassword(e)}
+              value={password}
               className="w-full px-4 py-2 leading-tight text-gray-700 bg-gray-200 border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"
               id="inline-password"
               type="password"
@@ -49,7 +84,7 @@ function Login() {
           </button>
         </div>
       </form>
-      {/* <TostNotification /> */}
+      <TostNotification />
     </div>
   );
 }
