@@ -1,0 +1,3 @@
+//>>>>> Page Login
+###Model Ldap
+GET https://wservice.cpf.co.th/Food/Food_Authen_Center/AuthenService.svc/GetLDAPConfigByAppCode/OMS_SMARTFAC
