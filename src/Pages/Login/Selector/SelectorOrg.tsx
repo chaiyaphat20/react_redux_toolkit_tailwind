@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Org } from '../../../models/login/org';
 import { fetchDataOrg } from '../../../services/Api.services';
+import _ from 'lodash';
 interface PropsType {
   org: string;
 }
@@ -16,11 +17,7 @@ function SelectorOrg({ org }: PropsType) {
       })();
     }
   }, [org]);
-  const json = JSON.stringify(orgName);
-  useEffect(() => {
-    console.log(orgName?.GetOrganizationListByCountryResult[0].OrgNameLoc);
-    // eslint-disable-next-line
-  }, [json]);
+
   const handleSelect = (e: React.FormEvent<HTMLSelectElement>) => {
     if (e.currentTarget.value === 'none') return;
     console.log(e.currentTarget.value);
@@ -31,6 +28,28 @@ function SelectorOrg({ org }: PropsType) {
     //   });
     // })();
   };
+
+  //watch change object
+  function useDeepEffect(fn: ()=>void, deps: any) {
+    const isFirst = useRef(true);
+    const prevDeps = useRef(deps);
+    useEffect(() => {
+      const isFirstEffect = isFirst.current;
+      const isSame = prevDeps.current.every((obj: any, index: any) => {
+        return _.isEqual(obj, deps[index]);
+      });
+      isFirst.current = false;
+      prevDeps.current = deps;
+      if (isFirstEffect || !isSame) {
+        return fn();
+      }
+      // eslint-disable-next-line
+    }, deps);
+  }
+
+  useDeepEffect(() => {
+    console.log(orgName?.GetOrganizationListByCountryResult[0].OrgNameLoc);
+  }, [orgName]);
 
   return (
     <div className="relative flex flex-col mb-7">
