@@ -10,10 +10,17 @@ function SelectorOrg({ org }: PropsType) {
     if (org !== 'none' && org) {
       (async function () {
         const getDataOrg = await fetchDataOrg(org);
-        setOrgName(getDataOrg);
+        setOrgName(() => {
+          return getDataOrg;
+        });
       })();
     }
   }, [org]);
+  const json = JSON.stringify(orgName);
+  useEffect(() => {
+    console.log(orgName?.GetOrganizationListByCountryResult[0].OrgNameLoc);
+    // eslint-disable-next-line
+  }, [json]);
   const handleSelect = (e: React.FormEvent<HTMLSelectElement>) => {
     if (e.currentTarget.value === 'none') return;
     console.log(e.currentTarget.value);
@@ -28,7 +35,6 @@ function SelectorOrg({ org }: PropsType) {
   return (
     <div className="relative flex flex-col mb-7">
       <select onChange={handleSelect} className="w-full px-4 py-2 pr-8 leading-tight bg-white border border-gray-400 rounded shadow appearance-none hover:border-gray-500 focus:outline-none focus:shadow-outline">
-        <option value="none">กรุณาเลือก Org</option>
         {orgName &&
           orgName?.GetOrganizationListByCountryResult.map((e: any, index: number) => {
             return (
