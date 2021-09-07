@@ -107,10 +107,12 @@ function Home() {
               </div>
               <div className="flex items-center justify-end w-1/2 ">
                 <div className="flex flex-col items-center mr-2 justify-evenly ">
-                  <label htmlFor="file-input" className="mr-1">
+                  <label htmlFor="file-input" className="flex flex-col items-center mr-1">
                     <img src={excelIcon} width={30} className="cursor-pointer" alt="images" />
+                    <h1 className="cursor-pointer">Import</h1>
                   </label>
                   <input
+                    className="hidden"
                     id="file-input"
                     type="file"
                     onChange={(e) => {
@@ -135,7 +137,6 @@ function Home() {
                   <CSVLink data={items} headers={headers}>
                     <h1>Download</h1>
                   </CSVLink>
-                  ;
                 </div>
               </div>
             </div>
