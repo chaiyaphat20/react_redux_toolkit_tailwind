@@ -44,7 +44,7 @@ function Login() {
         <SelectorLdap setOrg={setOrg} />
         <SelectorOrg org={org} />
         <div className="flex justify-center mt-4 bg ">
-          <button data-testid="required-button" className="w-full px-4 py-2 font-bold text-white bg-purple-500 rounded shadow hover:bg-purple-400 focus:shadow-outline focus:outline-none" type="submit">
+          <button className="w-full px-4 py-2 font-bold text-white bg-purple-500 rounded shadow hover:bg-purple-400 focus:shadow-outline focus:outline-none" type="submit">
             LOGIN
           </button>
         </div>
