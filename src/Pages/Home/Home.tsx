@@ -132,10 +132,12 @@ function Home() {
                     content={() => refTable.current}
                   />
                 </div>
-                <div className="flex flex-col items-center mr-2">
-                  <img src={directDownloadIcon} width={30} className="cursor-pointer " alt="images" />
+                <div>
                   <CSVLink data={items} headers={headers}>
-                    <h1>Download</h1>
+                    <div className="flex flex-col items-center mr-2">
+                      <img src={directDownloadIcon} width={30} className="cursor-pointer " alt="images" />
+                      <h1>Download</h1>
+                    </div>
                   </CSVLink>
                 </div>
               </div>
