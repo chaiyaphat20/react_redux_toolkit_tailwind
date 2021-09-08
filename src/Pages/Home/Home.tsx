@@ -8,6 +8,8 @@ import directDownloadIcon from '../../assets/images/direct-download.png';
 import userIcon from '../../assets/images/user.png';
 import moreIcon from '../../assets/images/more.png';
 
+import titleIcon from '../../assets/images/OP_cpf_icon.png';
+
 import homeIcon from '../../assets/images/menu/home.png';
 import configIcon from '../../assets/images/menu/config.png';
 import maintainIcon from '../../assets/images/menu/add.png';
@@ -58,13 +60,53 @@ function Home() {
     { label: 'ARRIVE_TIME', key: 'ARRIVE_TIME' },
   ];
 
+  let componentTable: React.ReactNode = (
+    <div className="flex items-center justify-center h-full">
+      <h1>ยังไม่มีข้อมูล</h1>
+    </div>
+  );
+  if (items.length !== 0) {
+    componentTable = (
+      <table className="w-full text-center " ref={refTable}>
+        <thead className="text-white bg-gray-600">
+          <tr className="flex w-full py-2 ">
+            <th className="w-1/12 ">รอบที่</th>
+            <th className="w-1/12 ">ลำดับ</th>
+            <th className="w-2/12 ">รหัสเส้นทาง</th>
+            <th className="w-3/12">เส้นทาง</th>
+            <th className="w-1/12 ">Dock</th>
+            <th className="w-1/12">เริ่มโหลด</th>
+            <th className="w-1/12 ">ออกจากโรงงาน</th>
+            <th className="w-1/12">ออกช้าสุด</th>
+            <th className="w-1/12 ">ต้องถึงลูกค้า</th>
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((data, index) => (
+            <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-200' : 'bg-gray-50'} flex w-full py-2`}>
+              <th className="w-1/12 ">{data.ROUND_NO}</th>
+              <td className="w-1/12 ">{data.ROUTE_SEQ}</td>
+              <td className="w-2/12 ">{data.ROUTE_CODE}</td>
+              <td className="w-3/12 ">{data.ROUTE_NAME}</td>
+              <td className="w-1/12 ">{data.DOCK_NO}</td>
+              <td className="w-1/12 ">{data.LOADING_TIME}</td>
+              <td className="w-1/12 ">{data.LEAVE_TIME}</td>
+              <td className="w-1/12 ">{data.LATE_TIME}</td>
+              <td className="w-1/12 ">{data.ARRIVE_TIME}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  }
   return (
     <div className="flex flex-col w-screen h-screen overflow-y-hidden min-w-980">
       <div className="flex flex-row w-full h-16 ">
         <div>
-          <h1 className="h-full text-5xl font-bold text-white bg-red-300">OPS</h1>
+          {/* <h1 className="h-full text-5xl font-bold text-white bg-red-300">OPS</h1> */}
+          <img src={titleIcon} className="h-16" alt="images" />
         </div>
-        <div className="flex items-center justify-end w-full bg-blue-300">
+        <div className="flex items-center justify-end w-full bg-title_blue">
           <div className="mr-2 cursor-pointer">
             <img src={userIcon} className="w-10 h-10 rounded-full bg-gray-50" alt="images" />
           </div>
@@ -98,7 +140,7 @@ function Home() {
         <div className="w-full h-full px-10 ">
           <div className="flex flex-col w-full h-32 ">
             <div className="flex flex-row items-end justify-end ">
-              <h1 className="text-2xl font-bold">Window Time</h1>
+              <h1 className="my-2 text-3xl font-bold">Window Time</h1>
             </div>
             <div className="flex w-full pt-2">
               <div className="flex flex-row items-center justify-start w-1/2 ">
@@ -143,38 +185,7 @@ function Home() {
               </div>
             </div>
           </div>
-          <div className="w-full pb-4 overflow-y-scroll text-xs 2xl:text-sm h-4/5">
-            <table className="w-full text-center " ref={refTable}>
-              <thead className="text-white bg-gray-600">
-                <tr className="flex w-full py-2 ">
-                  <th className="w-1/12 ">รอบที่</th>
-                  <th className="w-1/12 ">ลำดับ</th>
-                  <th className="w-2/12 ">รหัสเส้นทาง</th>
-                  <th className="w-3/12">เส้นทาง</th>
-                  <th className="w-1/12 ">Dock</th>
-                  <th className="w-1/12">เริ่มโหลด</th>
-                  <th className="w-1/12 ">ออกจากโรงงาน</th>
-                  <th className="w-1/12">ออกช้าสุด</th>
-                  <th className="w-1/12 ">ต้องถึงลูกค้า</th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.map((data, index) => (
-                  <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-200' : 'bg-gray-50'} flex w-full py-2`}>
-                    <th className="w-1/12 ">{data.ROUND_NO}</th>
-                    <td className="w-1/12 ">{data.ROUTE_SEQ}</td>
-                    <td className="w-2/12 ">{data.ROUTE_CODE}</td>
-                    <td className="w-3/12 ">{data.ROUTE_NAME}</td>
-                    <td className="w-1/12 ">{data.DOCK_NO}</td>
-                    <td className="w-1/12 ">{data.LOADING_TIME}</td>
-                    <td className="w-1/12 ">{data.LEAVE_TIME}</td>
-                    <td className="w-1/12 ">{data.LATE_TIME}</td>
-                    <td className="w-1/12 ">{data.ARRIVE_TIME}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <div className="w-full pb-4 overflow-y-auto text-xs 2xl:text-sm h-4/5">{componentTable}</div>
         </div>
       </div>
     </div>

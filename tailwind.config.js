@@ -22,6 +22,10 @@ module.exports = {
         600: '600px',
         'full-4rem': 'calc(100% - 4rem)',
       },
+      backgroundColor: (theme) => ({
+        title_blue: '#61dbe1',
+        title_red: '#ff5d5d',
+      }),
     },
   },
   variants: {
