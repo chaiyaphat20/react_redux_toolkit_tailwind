@@ -5,20 +5,12 @@ import { useRef, useState } from 'react';
 import excelIcon from '../../assets/images/excel.png';
 import printerIcon from '../../assets/images/printer.png';
 import directDownloadIcon from '../../assets/images/direct-download.png';
-import userIcon from '../../assets/images/user.png';
-import moreIcon from '../../assets/images/more.png';
-
-import titleIcon from '../../assets/images/OP_cpf_icon.png';
-
-import homeIcon from '../../assets/images/menu/home.png';
-import configIcon from '../../assets/images/menu/config.png';
-import maintainIcon from '../../assets/images/menu/add.png';
-import dashboardIcon from '../../assets/images/menu/dashboard.png';
-import settingIcon from '../../assets/images/menu/settings.png';
 
 import ReactToPrint from 'react-to-print';
 
 import { CSVLink } from 'react-csv';
+import Header from '../../components/Header';
+import Navbar from '../../components/Navbar';
 
 function Home() {
   const [items, setItems] = useState<Excel[]>([]);
@@ -101,42 +93,9 @@ function Home() {
   }
   return (
     <div className="flex flex-col w-screen h-screen overflow-y-hidden min-w-980">
-      <div className="flex flex-row w-full h-16 ">
-        <div>
-          {/* <h1 className="h-full text-5xl font-bold text-white bg-red-300">OPS</h1> */}
-          <img src={titleIcon} className="h-16" alt="images" />
-        </div>
-        <div className="flex items-center justify-end w-full bg-title_blue">
-          <div className="mr-2 cursor-pointer">
-            <img src={userIcon} className="w-10 h-10 rounded-full bg-gray-50" alt="images" />
-          </div>
-          <h1 className="mr-2 font-bold text-white">Chaiyaphat Supharak</h1>
-          <img src={moreIcon} className="w-4 h-4 " alt="images" />
-        </div>
-      </div>
+      <Header />
       <div className="flex w-full h-full-4rem">
-        <div className="flex flex-col items-center w-20 h-full py-2 bg-gray-200 ">
-          <div className="flex flex-col items-center justify-center my-2 cursor-pointer w-14 h-14">
-            <img src={homeIcon} width={35} alt="images" />
-            <h1 className="text-sm">Home</h1>
-          </div>
-          <div className="flex flex-col items-center justify-center my-2 cursor-pointer w-14 h-14">
-            <img src={configIcon} width={35} alt="images" />
-            <h1 className="text-sm">Config</h1>
-          </div>
-          <div className="flex flex-col items-center justify-center my-2 cursor-pointer w-14 h-14">
-            <img src={maintainIcon} width={35} alt="images" />
-            <h1 className="text-sm">Maintain</h1>
-          </div>
-          <div className="flex flex-col items-center justify-center my-2 cursor-pointer w-14 h-14">
-            <img src={dashboardIcon} width={35} alt="images" />
-            <h1 className="text-sm">Dashboard</h1>
-          </div>
-          <div className="flex flex-col items-center justify-center my-2 cursor-pointer w-14 h-14">
-            <img src={settingIcon} width={35} alt="images" />
-            <h1 className="text-sm">Setting</h1>
-          </div>
-        </div>
+        <Navbar />
         <div className="w-full h-full px-10 ">
           <div className="flex flex-col w-full h-32 ">
             <div className="flex flex-row items-end justify-end ">
@@ -185,7 +144,7 @@ function Home() {
               </div>
             </div>
           </div>
-          <div className="w-full pb-4 overflow-y-auto text-xs 2xl:text-sm h-4/5">{componentTable}</div>
+          <div className="w-full pb-6 overflow-y-auto text-xs 2xl:text-sm h-4/5">{componentTable}</div>
         </div>
       </div>
     </div>
