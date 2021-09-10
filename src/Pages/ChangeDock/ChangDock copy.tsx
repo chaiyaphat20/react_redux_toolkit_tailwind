@@ -7,8 +7,33 @@ import { BiEdit, BiSave } from 'react-icons/bi';
 function ChangDock() {
   const [searchItem, setSearchItem] = useState('');
   const [selectItem, setSelectItem] = useState('');
-  const [dock, setDock] = useState('');
-  const [isSaved, setIsSaved] = useState(false);
+  const [click, setClick] = useState(false);
+  const [RegisterData, setRegisterData] = useState([
+    {
+      id: 0,
+      name: 'W Register',
+      value: 0,
+      isEdit: false,
+    },
+    {
+      id: 1,
+      name: 'Z Register',
+      value: 0,
+      isEdit: false,
+    },
+    {
+      id: 2,
+      name: 'B Register',
+      value: 0,
+      isEdit: false,
+    },
+    {
+      id: 3,
+      name: 'C Register',
+      value: 0,
+      isEdit: false,
+    },
+  ]);
   const [dataForUpdate, setDataForUpdate] = useState([
     {
       round: 1,
@@ -140,21 +165,6 @@ function ChangDock() {
     },
   ]);
 
-  const checkOn = () => {
-    const roundSelect = Number(selectItem.split('-')[0]);
-    const dockSelect = Number(selectItem.split('-')[1]);
-    const newData = data.map((e) => {
-      let checkRound = roundSelect === e.round ? true : false;
-      let checkSeq = dockSelect === e.seq ? true : false;
-      if (checkRound && checkSeq) {
-        return { ...e, dock: dock };
-      }
-      return e;
-    });
-    setIsSaved(true);
-    setData(newData);
-  };
-
   let componentTable: React.ReactNode = (
     <div className="flex items-center justify-center h-full">
       <h1>ยังไม่มีข้อมูล</h1>
@@ -190,40 +200,23 @@ function ChangDock() {
                     setSelectItem(`${data.round}-${data.seq}`);
                   }}>
                   {(Number(selectItem.split('-')[0]) === data.round ? true : false) && (Number(selectItem.split('-')[1]) === data.seq ? true : false) ? (
-                    <div className="flex flex-row items-center">
-                      {!isSaved ? (
-                        <>
-                          <input
-                            value={dock}
-                            className="w-8"
-                            onChange={(e) => {
-                              setDock(e.target.value);
-                            }}
-                          />
-                          <BiSave
-                            onClick={() => {
-                              checkOn();
-                            }}
-                          />
-                        </>
-                      ) : (
-                        <>
-                          <h1 className="mr-2 text-gray-900">{data.dock}</h1>
-                          <BiEdit
-                            onClick={() => {
-                              checkOn();
-                            }}
-                          />
-                        </>
-                      )}
+                    <div className="flex flex-row">
+                      <input
+                        defaultValue={data.dock}
+                        className="w-4"
+                        onChange={() => {
+                          // setDataForUpdate((t) => t.concat(data));
+                        }}
+                      />
+                      <BiSave
+                        className="bg-green-300"
+                        onClick={() => {
+                          setClick(!click);
+                        }}
+                      />
                     </div>
                   ) : (
-                    <div
-                      className="flex flex-row items-center"
-                      onClick={() => {
-                        setDock('');
-                        setIsSaved(false);
-                      }}>
+                    <div className="flex flex-row ">
                       <h1 className="mr-2 text-gray-900">{data.dock}</h1>
                       <BiEdit />
                     </div>
@@ -236,6 +229,21 @@ function ChangDock() {
       </table>
     );
   }
+  useEffect(() => {
+    console.log(data);
+    // if((Number(selectItem.split('-')[0]) === data.round ? true : false) && (Number(selectItem.split('-')[1]) === data.seq ? true : false)){
+    const newData = data.map((e) => ((Number(selectItem.split('-')[0]) === e.round ? true : false) && (Number(selectItem.split('-')[1]) === e.seq ? true : false) ? { ...e, dock: '999' } : e));
+    setData(newData);
+    if (click) {
+      console.log('yesyes');
+    }
+    // }
+  }, [click]);
+
+  const checkOn = (id:any) => {
+    const datas = RegisterData.map((data) => (data.id === id ? { ...data, value: 99 } : data));
+    setRegisterData(datas);
+  };
 
   return (
     <div className="flex flex-col w-screen h-screen overflow-y-hidden min-w-980">
@@ -264,7 +272,24 @@ function ChangDock() {
               </button>
             </div>
           </div>
-          <div className="w-full pb-6 overflow-y-auto text-base h-4/5">{componentTable}</div>
+          <div className="w-full pb-6 overflow-y-auto text-xs 2xl:text-sm h-4/5">
+            <table>
+              <thead className="orange lighten-2">
+                <tr>
+                  <th data-field="Namee">Register Name</th>
+                  <th data-field="value">Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                {RegisterData.map((register) => (
+                  <tr>
+                    <td>{register.name}</td>
+                    <td onClick={() => checkOn(register.id)}>{register.value}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
