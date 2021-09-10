@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import Header from '../../components/Header';
 import Navbar from '../../components/Navbar';
@@ -9,15 +9,6 @@ function ChangDock() {
   const [selectItem, setSelectItem] = useState('');
   const [dock, setDock] = useState('');
   const [isSaved, setIsSaved] = useState(false);
-  const [dataForUpdate, setDataForUpdate] = useState([
-    {
-      round: 1,
-      seq: 1,
-      lineCode: 'NBB01',
-      line: 'CDC นครสวรรค์ ไส้กรอก PO1',
-      dock: '1',
-    },
-  ]);
   const [data, setData] = useState([
     {
       round: 1,
@@ -25,6 +16,7 @@ function ChangDock() {
       lineCode: 'NBB01',
       line: 'CDC นครสวรรค์ ไส้กรอก PO1',
       dock: '1',
+      isChange: false,
     },
     {
       round: 1,
@@ -32,6 +24,7 @@ function ChangDock() {
       lineCode: 'NBB01',
       line: 'CDC นครสวรรค์ ไส้กรอก PO2',
       dock: '2',
+      isChange: false,
     },
     {
       round: 1,
@@ -39,6 +32,7 @@ function ChangDock() {
       lineCode: 'NBB03',
       line: 'CDC นครสวรรค์ ไส้กรอก PO3',
       dock: '2',
+      isChange: false,
     },
     {
       round: 1,
@@ -46,6 +40,7 @@ function ChangDock() {
       lineCode: 'NBB03',
       line: 'CDC นครสวรรค์ ไส้กรอก PO3',
       dock: '2',
+      isChange: false,
     },
     {
       round: 1,
@@ -53,6 +48,7 @@ function ChangDock() {
       lineCode: 'NBB03',
       line: 'CDC นครสวรรค์ ไส้กรอก PO3',
       dock: '2',
+      isChange: false,
     },
     {
       round: 1,
@@ -60,6 +56,7 @@ function ChangDock() {
       lineCode: 'NBB03',
       line: 'CDC นครสวรรค์ ไส้กรอก PO3',
       dock: '2',
+      isChange: false,
     },
     {
       round: 1,
@@ -67,6 +64,7 @@ function ChangDock() {
       lineCode: 'NBB03',
       line: 'CDC นครสวรรค์ ไส้กรอก PO3',
       dock: '2',
+      isChange: false,
     },
     {
       round: 1,
@@ -74,6 +72,7 @@ function ChangDock() {
       lineCode: 'NBB03',
       line: 'CDC นครสวรรค์ ไส้กรอก PO3',
       dock: '2',
+      isChange: false,
     },
     {
       round: 1,
@@ -81,6 +80,7 @@ function ChangDock() {
       lineCode: 'NBB03',
       line: 'CDC นครสวรรค์ ไส้กรอก PO3',
       dock: '2',
+      isChange: false,
     },
     {
       round: 1,
@@ -88,6 +88,7 @@ function ChangDock() {
       lineCode: 'NBB03',
       line: 'CDC นครสวรรค์ ไส้กรอก PO3',
       dock: '2',
+      isChange: false,
     },
     {
       round: 1,
@@ -95,6 +96,7 @@ function ChangDock() {
       lineCode: 'NBB03',
       line: 'CDC นครสวรรค์ ไส้กรอก PO3',
       dock: '2',
+      isChange: false,
     },
     {
       round: 1,
@@ -102,6 +104,7 @@ function ChangDock() {
       lineCode: 'NBB03',
       line: 'CDC นครสวรรค์ ไส้กรอก PO3',
       dock: '2',
+      isChange: false,
     },
     {
       round: 2,
@@ -109,6 +112,7 @@ function ChangDock() {
       lineCode: 'NBB01',
       line: 'CDC2 นครสวรรค์ ไส้กรอก PO5',
       dock: '2',
+      isChange: false,
     },
     {
       round: 2,
@@ -116,6 +120,7 @@ function ChangDock() {
       lineCode: 'NBB01',
       line: 'CDC2 นครสวรรค์ ไส้กรอก PO1',
       dock: '1',
+      isChange: false,
     },
     {
       round: 2,
@@ -123,6 +128,7 @@ function ChangDock() {
       lineCode: 'NBB01',
       line: 'CDC2 นครสวรรค์ ไส้กรอก PO2',
       dock: '2',
+      isChange: false,
     },
     {
       round: 2,
@@ -130,6 +136,7 @@ function ChangDock() {
       lineCode: 'NBB03',
       line: 'CDC2 นครสวรรค์ ไส้กรอก PO3',
       dock: '2',
+      isChange: false,
     },
     {
       round: 2,
@@ -137,8 +144,14 @@ function ChangDock() {
       lineCode: 'NBB01',
       line: 'CDC2 นครสวรรค์ ไส้กรอก PO5',
       dock: '2',
+      isChange: false,
     },
   ]);
+
+  const saveData = () => {
+    const dataForSave = data.filter((items) => items.isChange);
+    console.log(dataForSave);
+  };
 
   const checkOn = () => {
     const roundSelect = Number(selectItem.split('-')[0]);
@@ -147,7 +160,7 @@ function ChangDock() {
       let checkRound = roundSelect === e.round ? true : false;
       let checkSeq = dockSelect === e.seq ? true : false;
       if (checkRound && checkSeq) {
-        return { ...e, dock: dock };
+        return { ...e, dock: dock, isChange: true };
       }
       return e;
     });
@@ -184,38 +197,30 @@ function ChangDock() {
               <td className="w-2/6 ">{data.lineCode}</td>
               <td className="w-2/6 ">{data.line}</td>
               <td className="w-1/6 ">
-                <div
-                  className="flex flex-row items-center justify-center cursor-pointer "
-                  onClick={() => {
-                    setSelectItem(`${data.round}-${data.seq}`);
-                  }}>
+                <div className="flex flex-row items-center justify-center cursor-pointer ">
                   {(Number(selectItem.split('-')[0]) === data.round ? true : false) && (Number(selectItem.split('-')[1]) === data.seq ? true : false) ? (
                     <div className="flex flex-row items-center">
-                      {!isSaved ? (
-                        <>
-                          <input
-                            value={dock}
-                            className="w-8"
-                            onChange={(e) => {
-                              setDock(e.target.value);
-                            }}
-                          />
-                          <BiSave
-                            onClick={() => {
-                              checkOn();
-                            }}
-                          />
-                        </>
-                      ) : (
-                        <>
-                          <h1 className="mr-2 text-gray-900">{data.dock}</h1>
-                          <BiEdit
-                            onClick={() => {
-                              checkOn();
-                            }}
-                          />
-                        </>
-                      )}
+                      <input
+                        type="number"
+                        min={1}
+                        value={dock}
+                        className="w-12"
+                        onChange={(e) => {
+                          setIsSaved(false);
+                          if (dock !== data.dock) {
+                            setDock(e.target.value);
+                          }
+                        }}
+                      />
+                      <BiSave
+                        color={isSaved ? 'grey' : 'green'}
+                        onClick={() => {
+                          setSelectItem('');
+                          if (dock !== data.dock) {
+                            checkOn();
+                          }
+                        }}
+                      />
                     </div>
                   ) : (
                     <div
@@ -223,8 +228,9 @@ function ChangDock() {
                       onClick={() => {
                         setDock('');
                         setIsSaved(false);
+                        setSelectItem(`${data.round}-${data.seq}`);
                       }}>
-                      <h1 className="mr-2 text-gray-900">{data.dock}</h1>
+                      <h1 className={`mr-2 text-gray-900 ${data.isChange ? 'text-green-500' : null}`}>{data.dock}</h1>
                       <BiEdit />
                     </div>
                   )}
@@ -257,6 +263,7 @@ function ChangDock() {
                   setSearchItem(e.target.value);
                 }}
               />
+              <button onClick={saveData}>Save</button>
               <button className="border-l shadow bg-grey-lightest border-grey hover:bg-grey-lightest">
                 <span className="flex items-center justify-end w-auto p-2 text-grey hover:text-grey-darkest">
                   <BiSearchAlt2 />
